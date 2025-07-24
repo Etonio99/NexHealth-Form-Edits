@@ -11,7 +11,7 @@ interface ContextMenuOption {
     icon?: React.ReactNode,
     action?: () => void,
     style?: string,
-    "sub-options"?: Record<string, () => void>,
+    "subOptions"?: Record<string, () => void>,
 }
 
 export default function ContextMenu() {
@@ -22,7 +22,7 @@ export default function ContextMenu() {
     }
 
     const metaData = selectedComponent.type in componentMetaData ? componentMetaData[selectedComponent.type as keyof typeof componentMetaData] : componentMetaData.unimplemented;
-    const menuOptions = getContextMenuOptions(selectedComponent.type, formData, selectedComponent.path, setFormData, hideContextMenu);
+    const menuOptions = getContextMenuOptions(selectedComponent.type, metaData.metaType, formData, selectedComponent.path, setFormData, hideContextMenu);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -60,11 +60,7 @@ export default function ContextMenu() {
             return null;
         }
 
-        const sortedOptionData = Object.fromEntries(
-            Object.entries(optionData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-        );
-
-        return Object.entries(sortedOptionData).map(([key, value], index) => {
+        return Object.entries(optionData).map(([key, value], index) => {
             if (value === null) {
                 console.warn(`Got null value from key ${key} when attempting to create elements from option data!`);
                 return null;
@@ -85,7 +81,7 @@ export default function ContextMenu() {
 
             const onClickAction = menuOption.action ?? (typeof value === "function" ? optionData.action : null);
             const additionalStyling = menuOption.style ?? "";
-            const containsSubOptions = "sub-options" in menuOption;
+            const containsSubOptions = "subOptions" in menuOption;
             const containsIcon = "icon" in menuOption;
 
             return <li key={`menu-option-${index}`} className={`relative group flex items-center gap-2 text-sm px-4 py-1 hover:bg-zinc-200 cursor-pointer ${additionalStyling}`} onClick={onClickAction === null ? () => {} : onClickAction}>
@@ -94,7 +90,7 @@ export default function ContextMenu() {
                 {containsSubOptions && <IoChevronForward />}
                 {containsSubOptions && <ul className="hidden group-hover:block absolute bg-white border border-zinc-300 min-w-8 rounded-md left-[100%] -top-[9px] py-2 shadow">
                     {
-                        Object.entries(menuOption['sub-options']!).map(([key, value], index) => {
+                        Object.entries(menuOption['subOptions']!).map(([key, value], index) => {
                             if (typeof value === "function") {
                                 return <li key={`menu-sub-option-${index}`} className="px-4 hover:bg-zinc-200 cursor-pointer py-1 whitespace-nowrap" onClick={() => value()}>{key}</li>;
                             }

@@ -1,6 +1,7 @@
 import { FaImage } from "react-icons/fa6";
 
-enum componentType {
+enum metaComponentType {
+    none,
     static,
     background,
     input,
@@ -11,107 +12,107 @@ enum componentType {
 const componentMetaData = {
     button: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     checkbox: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     columns: {
         showLabel: false,
-        metaType: componentType.background,
+        metaType: metaComponentType.background,
     },
     content: {
         showLabel: true,
-        metaType: componentType.static,
+        metaType: metaComponentType.static,
         labelKey: "html",
     },
     date: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     file: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     htmlelement: {
         showLabel: true,
-        metaType: componentType.static,
+        metaType: metaComponentType.static,
         labelKey: "content",
     },
     locationlogo: {
         className: "h-48",
         showLabel: false,
         icon: <FaImage className="opacity-50" size={96} />,
-        metaType: componentType.static,
+        metaType: metaComponentType.static,
     },
     panel: {
         showLabel: true,
         showSettingsButton: false,
-        metaType: componentType.page,
+        metaType: metaComponentType.page,
         labelKey: "title",
     },
     paymentmethod: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     radio: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     select: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     selectboxes: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     signature: {
         className: "h-48",
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     textarea: {
         className: "h-24",
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     textfield: {
         showLabel: true,
-        metaType: componentType.input,
+        metaType: metaComponentType.input,
     },
     unimplemented: {
         showLabel: true,
-        metaType: componentType.unimplemented,
+        metaType: metaComponentType.unimplemented,
     },
 }
 
-const getGeneralType = (value: string) => {
-    if (["text", "email", "address", "phoneNumber"].includes(value)) {
+const getGeneralType = (type: string) => {
+    if (["text", "email", "address", "phoneNumber"].includes(type)) {
         return "textfield";
     }
-    if (["datetime", "day"].includes(value)) {
+    if (["datetime", "day"].includes(type)) {
         return "date";
     }
-    return value;
+    return type;
 }
 
-const getComponentTypeStyle = (type: componentType) => {
+const getMetaComponentTypeStyle = (type: metaComponentType) => {
     switch (type) {
-        case componentType.background:
+        case metaComponentType.background:
             return "bg-zinc-200";
-        case componentType.input:
+        case metaComponentType.input:
             return "bg-sync-100 border border-sync-500";
-        case componentType.page:
+        case metaComponentType.page:
             return "bg-white border border-zinc-300 shadow";
-        case componentType.static:
+        case metaComponentType.static:
             return "bg-white border border-zinc-300";
-        case componentType.unimplemented:
+        case metaComponentType.unimplemented:
             return "bg-zinc-100 border border-zinc-300";
         default:
             return "";
     }
 }
 
-export { componentType, getComponentTypeStyle, componentMetaData, getGeneralType };
+export { metaComponentType, getMetaComponentTypeStyle, componentMetaData, getGeneralType };
