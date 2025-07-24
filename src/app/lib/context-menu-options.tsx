@@ -1,6 +1,6 @@
 import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
 import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders } from "react-icons/fa6";
-import { deleteComponent } from "./components/component-utils/universal-utils";
+import { deleteComponent, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 
 interface ContextMenuOption {
@@ -65,8 +65,8 @@ export default function getContextMenuOptions(componentType: string, metaType: m
             metaType: metaComponentType.input,
             icon: <FaSliders />,
             subOptions: {
-                "Toggle Hidden": () => {},
-                "Toggle Disabled": () => {},
+                "Toggle Hidden": () => runFormChangingAction(toggleBoolean(data, path, "hidden")),
+                "Toggle Disabled": () => runFormChangingAction(toggleBoolean(data, path, "disabled")),
             }
         }
     }
