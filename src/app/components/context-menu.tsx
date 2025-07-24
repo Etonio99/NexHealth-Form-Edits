@@ -40,10 +40,12 @@ export default function ContextMenu() {
 
         document.addEventListener("mousedown", handleClickOutsideOfMenu);
         window.addEventListener("resize", hideContextMenu);
+        document.addEventListener("scroll", hideContextMenu, true);
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutsideOfMenu);
             window.removeEventListener("resize", hideContextMenu);
+            document.removeEventListener("scroll", hideContextMenu, true);
         }
     });
 
