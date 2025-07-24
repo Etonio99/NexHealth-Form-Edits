@@ -47,7 +47,7 @@ export default function ContextMenu() {
             window.removeEventListener("resize", hideContextMenu);
             document.removeEventListener("scroll", hideContextMenu, true);
         }
-    });
+    }, []);
 
     if (!showContextMenu || !menuOptions) {
         return null;
