@@ -5,6 +5,7 @@ import getContextMenuOptions from "../lib/context-menu-options";
 import { useFormContext } from "./form-context"
 import { IoChevronForward } from "react-icons/io5";
 import React from "react";
+import { componentMetaData } from "../lib/components/component-data";
 
 interface ContextMenuOption {
     icon?: React.ReactNode,
@@ -20,6 +21,7 @@ export default function ContextMenu() {
         setShowContextMenu(false);
     }
 
+    const metaData = selectedComponent.type in componentMetaData ? componentMetaData[selectedComponent.type as keyof typeof componentMetaData] : componentMetaData.unimplemented;
     const menuOptions = getContextMenuOptions(selectedComponent.type, formData, selectedComponent.path, setFormData, hideContextMenu);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -65,7 +67,18 @@ export default function ContextMenu() {
         return Object.entries(sortedOptionData).map(([key, value], index) => {
             if (value === null) {
                 console.warn(`Got null value from key ${key} when attempting to create elements from option data!`);
-                return <></>
+                return null;
+            }
+
+            if (typeof value !== "object") {
+                console.warn(`Got non-object value from key ${key} when attempting to create elements from option data!`);
+                return null;
+            }
+
+            if ("componentType" in value && "metaType" in metaData) {
+                if (value.componentType !== metaData.metaType) {
+                    return null;
+                }
             }
 
             const menuOption = value as ContextMenuOption;
@@ -83,18 +96,20 @@ export default function ContextMenu() {
                     {
                         Object.entries(menuOption['sub-options']!).map(([key, value], index) => {
                             if (typeof value === "function") {
-                                return <li key={`menu-sub-ption-${index}`} className="px-4 hover:bg-zinc-200 cursor-pointer py-1 whitespace-nowrap" onClick={() => value()}>{key}</li>;
+                                return <li key={`menu-sub-option-${index}`} className="px-4 hover:bg-zinc-200 cursor-pointer py-1 whitespace-nowrap" onClick={() => value()}>{key}</li>;
                             }
                             return null;
                         })
                     }
                 </ul>}
             </li>
-        })
+        }).filter(option => option !== null);
     }
 
     const numberOfOptionObjects = Object.entries(menuOptions).filter(([key, value]) => value !== null).length;
 
+    let addedOptionSections = 0;
+    
     return (
         <div className="relative text-zinc-700">
             <div ref={menuRef} style={{
@@ -103,17 +118,18 @@ export default function ContextMenu() {
             }} className="bg-white border border-zinc-300 w-fit py-2 rounded-md absolute shadow z-50">
                 <ul>
                     {
-                        Object.entries(menuOptions).map(([key, value], index) => {
+                        Object.values(menuOptions).map((value, index) => {
                             const optionElements = convertOptionDataToElements(value);
-
-                            if (optionElements === null) {
+                            console.log(optionElements);
+                            if (optionElements === null || optionElements.length === 0) {
                                 return <React.Fragment key={`menu-section-${index}`}/>;
                             }
+                            
+                            addedOptionSections += 1;
 
                             return (
                                 <React.Fragment key={`menu-section-${index}`}>
-                                    {numberOfOptionObjects > 1 && index <= numberOfOptionObjects && index > 0 && <hr className="text-zinc-300 my-2 mx-2" />}
-                                    {/* <li key={`menu-section-label-${index}`} className="px-3 py-1 text-xs text-zinc-300 font-bold">{getSectionLabel(key)}</li> */}
+                                    {addedOptionSections > 1 && numberOfOptionObjects > 1 && index <= numberOfOptionObjects && index > 0 && <hr className="text-zinc-300 my-2 mx-2" />}
                                     {optionElements}
                                 </React.Fragment>
                             );

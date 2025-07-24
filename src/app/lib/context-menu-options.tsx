@@ -2,14 +2,30 @@ import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHi
 
 import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ } from "react-icons/fa6";
 import { deleteComponent } from "./components/component-utils/universal-utils";
+import { componentType } from "./components/component-data";
 
-export default function getContextMenuOptions(componentType: string, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void) {
+export default function getContextMenuOptions(generalComponentType: string, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void) {
     let specificOptions = null;
 
     const runFormChangingAction = (action: () => any) => {
 
         setFormData(action);
         hideContextMenu();
+    }
+
+    const otherOptions = {
+        // "Toggle Hidden": {
+        //     componentType: componentType.input,
+        //     action: () => {console.log("Toggling hidden!")}
+        // },
+        // "Toggle Disabled": {
+        //     componentType: componentType.input,
+        //     action: () => {console.log("Toggling hidden!")}
+        // },
+        // "Background Test": {
+        //     componentType: componentType.background,
+        //     action: () => {},
+        // }
     }
 
     const universalOptions = {
@@ -20,7 +36,7 @@ export default function getContextMenuOptions(componentType: string, data: any, 
         },
     }
 
-    switch (componentType) {
+    switch (generalComponentType) {
         case "columns":
             specificOptions = {
                 "Split Into Columns": {
@@ -58,5 +74,5 @@ export default function getContextMenuOptions(componentType: string, data: any, 
             break;
     }
     
-    return {specificOptions, universalOptions};
+    return {specificOptions, otherOptions, universalOptions};
 }
