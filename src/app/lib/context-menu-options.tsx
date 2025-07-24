@@ -1,5 +1,4 @@
 import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
-
 import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders } from "react-icons/fa6";
 import { deleteComponent } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
