@@ -84,7 +84,7 @@ export default function ContextMenu() {
             const containsSubOptions = "subOptions" in menuOption;
             const containsIcon = "icon" in menuOption;
 
-            return <li key={`menu-option-${index}`} className={`relative group flex items-center gap-2 text-sm px-4 py-1 hover:bg-zinc-200 cursor-pointer ${additionalStyling}`} onClick={onClickAction === null ? () => {} : onClickAction}>
+            return <li key={`menu-option-${index}`} className={`relative group flex items-center gap-2 text-sm px-4 py-1 hover:bg-zinc-100 cursor-pointer ${additionalStyling}`} onClick={onClickAction === null ? () => {} : onClickAction}>
                 {containsIcon && menuOption.icon}
                 {key}
                 {containsSubOptions && <IoChevronForward />}
@@ -92,7 +92,7 @@ export default function ContextMenu() {
                     {
                         Object.entries(menuOption['subOptions']!).map(([key, value], index) => {
                             if (typeof value === "function") {
-                                return <li key={`menu-sub-option-${index}`} className="px-4 hover:bg-zinc-200 cursor-pointer py-1 whitespace-nowrap" onClick={() => value()}>{key}</li>;
+                                return <li key={`menu-sub-option-${index}`} className="px-4 hover:bg-zinc-100 cursor-pointer py-1 whitespace-nowrap" onClick={() => value()}>{key}</li>;
                             }
                             return null;
                         })
