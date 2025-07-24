@@ -3,8 +3,6 @@ import CopyButton from "./components/copy-button";
 import FormContext from "./components/form-context";
 import FormDisplayer from "./components/form-displayer";
 import FormJsonInputField from "./components/form-json-input-field";
-
-import { FaBan, FaEyeSlash } from "react-icons/fa6";
 import Legend from "./components/legend";
 
 export default function Home() {
