@@ -1,21 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import getContextMenuOptions from "../lib/context-menu-options";
+import getContextMenuOptions, { ContextMenuOption } from "../lib/context-menu-options";
 import { useFormContext } from "./form-context"
 import { IoChevronForward } from "react-icons/io5";
 import React from "react";
 import { componentMetaData } from "../lib/components/component-data";
 
-interface ContextMenuOption {
-    icon?: React.ReactNode,
-    action?: () => void,
-    style?: string,
-    "subOptions"?: Record<string, () => void>,
-}
-
 export default function ContextMenu() {
-    const { formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu } = useFormContext();
+    const { formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu, setModalData } = useFormContext();
 
     const hideContextMenu = () => {
         setShowContextMenu(false);
@@ -79,7 +72,24 @@ export default function ContextMenu() {
 
             const menuOption = value as ContextMenuOption;
 
-            const onClickAction = menuOption.action ?? (typeof value === "function" ? optionData.action : null);
+            const getOnClickAction = (menuOptionData: ContextMenuOption) => {
+                if (menuOptionData.action !== null) {
+                    if (typeof value === "function") {
+                        return menuOptionData.action;
+                    }
+                }
+
+                if (menuOptionData.modal !== null) {
+                    return () => {
+                        setShowContextMenu(false);
+                        setModalData(menuOptionData.modal)
+                    };
+                }
+
+                return null;
+            }
+
+            const onClickAction = getOnClickAction(menuOption);
             const additionalStyling = menuOption.style ?? "";
             const containsSubOptions = "subOptions" in menuOption;
             const containsIcon = "icon" in menuOption;
@@ -111,12 +121,11 @@ export default function ContextMenu() {
             <div ref={menuRef} style={{
                 left: selectedComponent.gearPosition.left,
                 top: selectedComponent.gearPosition.top,
-            }} className="bg-white border border-zinc-300 w-fit py-2 rounded-md absolute shadow z-50">
+            }} className="bg-white border border-zinc-300 w-fit py-2 rounded-md absolute shadow z-30">
                 <ul>
                     {
                         Object.values(menuOptions).map((value, index) => {
                             const optionElements = convertOptionDataToElements(value);
-                            console.log(optionElements);
                             if (optionElements === null || optionElements.length === 0) {
                                 return <React.Fragment key={`menu-section-${index}`}/>;
                             }

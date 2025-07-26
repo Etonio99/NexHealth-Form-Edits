@@ -1,22 +1,28 @@
 import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
-import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders } from "react-icons/fa6";
+import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots } from "react-icons/fa6";
 import { deleteComponent, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
+import { buttonType } from "./components/button-styling";
 
 interface ContextMenuOption {
     icon?: React.ReactNode,
-    action?: () => void,
+    action?: (...args: any[]) => void,
     subOptions?: Record<string, () => void>,
     applyTo?: string[],
     metaType?: metaComponentType,
     universal?: boolean,
     style?: string,
+    modal?: any,
 }
 
 export default function getContextMenuOptions(componentType: string, metaType: metaComponentType, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void) {
     const runFormChangingAction = (action: () => any) => {
         setFormData(action);
         hideContextMenu();
+    }
+
+    const testFunction = (test1: string, test2: string) => {
+        console.log(`I eat ${test1} on ${test2}!`);
     }
 
     const contextMenuOptions: Record<string, ContextMenuOption> = {
@@ -68,7 +74,37 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                 "Toggle Hidden": () => runFormChangingAction(toggleBoolean(data, path, "hidden")),
                 "Toggle Disabled": () => runFormChangingAction(toggleBoolean(data, path, "disabled")),
             }
-        }
+        },
+        "Find and Replace": {
+            applyTo: ["panel", "columns", "content"],
+            icon: <FaArrowsTurnToDots />,
+            modal: {
+                showCloseButton: true,
+                components: [
+                    {
+                        type: "title",
+                        label: "Find and Replace",
+                    },
+                    {
+                        type: "textfield",
+                        key: "textToReplace",
+                        label: "Text to Replace",
+                    },
+                    {
+                        type: "textfield",
+                        key: "replacementText",
+                        label: "Replacement Text",
+                    },
+                    {
+                        type: "button",
+                        action: testFunction,
+                        label: "Go",
+                        buttonType: buttonType.primary,
+                        parameters: ["textToReplace", "replacementText"],
+                    }
+                ],
+            },
+        },
     }
 
     const specificOptions = Object.fromEntries(Object.entries(contextMenuOptions)
@@ -90,3 +126,5 @@ export default function getContextMenuOptions(componentType: string, metaType: m
 
     return { specificOptions, universalOptions };
 }
+
+export type { ContextMenuOption };

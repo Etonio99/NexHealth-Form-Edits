@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { buttonType } from "../lib/components/button-styling";
 
 interface SelectedComponent {
     type: string,
@@ -18,6 +19,10 @@ interface FormContextType {
     setSelectedComponent: (newData: SelectedComponent) => void,
     showContextMenu: boolean,
     setShowContextMenu: (setting: boolean) => void,
+    modalData: any,
+    setModalData: (newData: any) => void,
+    modalTemporaryVariables: any,
+    setModalTemporaryVariables: (newData: any) => void,
 }
 
 interface FormContextProps {
@@ -37,9 +42,11 @@ export default function FormContext({ children }:FormContextProps) {
         }
     });
     const [showContextMenu, setShowContextMenu] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const [modalTemporaryVariables, setModalTemporaryVariables] = useState({});
 
     return (
-        <FormDataContext value={{ formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu }}>
+        <FormDataContext value={{ formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu, modalData, setModalData, modalTemporaryVariables, setModalTemporaryVariables }}>
             {children}
         </FormDataContext>
     )

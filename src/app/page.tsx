@@ -1,4 +1,5 @@
 import ContextMenu from "./components/context-menu";
+import ContextMenuOptionModal from "./components/context-menu-option-modal";
 import CopyButton from "./components/copy-button";
 import FormContext from "./components/form-context";
 import FormDisplayer from "./components/form-displayer";
@@ -9,6 +10,7 @@ export default function Home() {
   return (
     <div>
       <FormContext>
+        <ContextMenuOptionModal />
         <ContextMenu />
         <main className="grid grid-cols-[1fr_25%] h-screen max-h-screen overflow-hidden">
           <div className="p-16 overflow-y-scroll">
