@@ -86,6 +86,10 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                         label: "Find and Replace",
                     },
                     {
+                        type: "notice",
+                        label: "This is an unsafe action. It will convert the JSON data to text, and then find a replace any instances. Do not replace anything that could interfere with the JSON structure."
+                    },
+                    {
                         type: "textfield",
                         key: "textToReplace",
                         label: "Text to Replace",

@@ -4,7 +4,7 @@ import React from "react";
 import { buttonType } from "../lib/components/button-styling";
 import { useFormContext } from "./form-context";
 import SmallButton from "./small-button";
-import { FaX } from "react-icons/fa6";
+import { FaXmark } from "react-icons/fa6";
 
 interface ModalComponentData {
     type: string,
@@ -63,12 +63,16 @@ export default function ContextMenuOptionModal() {
         switch (componentData.type) {
             case "title":
                 return <div key={`modal-element-${index}`}>
-                    <h2 className="font-bold text-lg">{componentData.label}</h2>
+                    <h2 className="font-bold text-xl">{componentData.label}</h2>
+                </div>
+            case "notice":
+                return <div className="text-zinc-500">
+                    <p>{componentData.label}</p>
                 </div>
             case "textfield":
-                return <div key={`modal-element-${index}`} className="mb-2">
-                    <label htmlFor={componentKey} className="text-zinc-500 text-sm">{componentData.label}</label>
-                    <input type="text" className="rounded-md border border-zinc-300 px-2 py-1 outline-none focus:ring-4 focus:ring-sync-500 focus" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
+                return <div key={`modal-element-${index}`} className="mb-2 flex flex-col gap-1">
+                    <label htmlFor={componentKey} className="font-bold">{componentData.label}</label>
+                    <input type="text" className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
                 </div>
             case "button":
                 return <div key={`modal-element-${index}`} className="grid place-items-center">
@@ -78,8 +82,8 @@ export default function ContextMenuOptionModal() {
     });
 
     return <div className="absolute inset-0 grid place-items-center">
-        <div className="relative bg-white rounded-md w-64 shadow p-4 z-50 flex flex-col gap-2 border border-zinc-300">
-            {modalData.showCloseButton && <FaX className="absolute top-4 right-4 text-zinc-700 cursor-pointer" onClick={closeModal} />}
+        <div className="relative bg-white rounded-md w-lg shadow p-8 z-50 flex flex-col gap-4">
+            {modalData.showCloseButton && <FaXmark className="absolute top-8 right-8 text-xl text-zinc-500 hover:text-zinc-600 cursor-pointer" onClick={closeModal} />}
             {componentElements}
         </div>
         <div className="bg-black opacity-50 absolute inset-0 z-40" />
