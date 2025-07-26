@@ -4,6 +4,7 @@ import React from "react";
 import { buttonType } from "../lib/components/button-styling";
 import { useFormContext } from "./form-context";
 import SmallButton from "./small-button";
+import { FaX } from "react-icons/fa6";
 
 interface ModalComponentData {
     type: string,
@@ -48,6 +49,10 @@ export default function ContextMenuOptionModal() {
             action();
         }
 
+        closeModal();
+    }
+
+    const closeModal = () => {
         setModalData(null);
         setModalTemporaryVariables({});
     }
@@ -73,7 +78,8 @@ export default function ContextMenuOptionModal() {
     });
 
     return <div className="absolute inset-0 grid place-items-center">
-        <div className="bg-white rounded-md w-64 shadow p-4 z-50 flex flex-col gap-2 border border-zinc-300">
+        <div className="relative bg-white rounded-md w-64 shadow p-4 z-50 flex flex-col gap-2 border border-zinc-300">
+            {modalData.showCloseButton && <FaX className="absolute top-4 right-4 text-zinc-700 cursor-pointer" onClick={closeModal} />}
             {componentElements}
         </div>
         <div className="bg-black opacity-50 absolute inset-0 z-40" />
