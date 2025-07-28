@@ -48,7 +48,6 @@ const componentMetaData = {
     },
     panel: {
         showLabel: true,
-        showSettingsButton: false,
         metaType: metaComponentType.page,
         labelKey: "title",
     },

@@ -16,37 +16,39 @@ interface ModalComponentData {
 }
 
 export default function ContextMenuOptionModal() {
-    const { modalData, setModalData, modalTemporaryVariables, setModalTemporaryVariables } = useFormContext();
+    const { setFormData, modalData, setModalData, modalTemporaryVariables, setModalTemporaryVariables } = useFormContext();
 
     if (!modalData || !(typeof modalData === "object")) {
         return null;
     }
 
-    const getActionParameters = (parameterStringArray: string[]) => {
-        const parameters = [];
-
-        for (const parameterString of parameterStringArray) {
-            if (parameterString in modalTemporaryVariables) {
-                parameters.push(modalTemporaryVariables[parameterString]);
+    const getActionParameters = (parameterArray: (string | any)[]) => {
+        return parameterArray.map(parameter => {
+            if (typeof parameter === "string" && parameter.startsWith("$")) {
+                const key = parameter.slice(1);
+                return modalTemporaryVariables[key];
             }
-        }
-
-        return parameters;
+            return parameter;
+        });
     }
 
-    const runButtonAction = (action: (...args: any[]) => {}, parameterStringArray?: string[]) => {
-        if (parameterStringArray) {
-            const parameters = getActionParameters(parameterStringArray);
+    const runFormChangingAction = (action: (...args: any[]) => any) => {
+        setFormData(action);
+    }
+
+    const runButtonAction = (action: (...args: any[]) => {}, parameterArray?: string[]) => {
+        if (parameterArray) {
+            const parameters = getActionParameters(parameterArray);
     
             if (parameters.length > 0) {
-                action(...parameters);
+                runFormChangingAction(() => action(...parameters));
             }
             else {
-                action();
+                runFormChangingAction(() => action());
             }
         }
         else {
-            action();
+            runFormChangingAction(() => action());
         }
 
         closeModal();
@@ -66,7 +68,7 @@ export default function ContextMenuOptionModal() {
                     <h2 className="font-bold text-xl">{componentData.label}</h2>
                 </div>
             case "notice":
-                return <div className="text-zinc-500">
+                return <div key={`modal-element-${index}`} className="text-zinc-500">
                     <p>{componentData.label}</p>
                 </div>
             case "textfield":

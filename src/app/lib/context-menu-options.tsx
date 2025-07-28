@@ -1,6 +1,6 @@
 import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
 import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots } from "react-icons/fa6";
-import { deleteComponent, toggleBoolean } from "./components/component-utils/universal-utils";
+import { deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 import { buttonType } from "./components/button-styling";
 
@@ -19,10 +19,6 @@ export default function getContextMenuOptions(componentType: string, metaType: m
     const runFormChangingAction = (action: () => any) => {
         setFormData(action);
         hideContextMenu();
-    }
-
-    const testFunction = (test1: string, test2: string) => {
-        console.log(`I eat ${test1} on ${test2}!`);
     }
 
     const contextMenuOptions: Record<string, ContextMenuOption> = {
@@ -101,10 +97,10 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                     },
                     {
                         type: "button",
-                        action: testFunction,
+                        action: findAndReplace,
                         label: "Go",
                         buttonType: buttonType.primary,
-                        parameters: ["textToReplace", "replacementText"],
+                        parameters: [data, path, "$textToReplace", "$replacementText"],
                     }
                 ],
             },
