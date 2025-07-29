@@ -43,7 +43,7 @@ const componentMetaData = {
     locationlogo: {
         className: "h-48",
         showLabel: false,
-        icon: <FaImage className="opacity-50" size={96} />,
+        icon: <FaImage className="opacity-25" size={96} />,
         metaType: metaComponentType.static,
     },
     panel: {
