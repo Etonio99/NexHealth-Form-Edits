@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import getContextMenuOptions, { ContextMenuOption } from "../lib/context-menu-options";
-import { useFormContext } from "./form-context"
-import { IoChevronForward } from "react-icons/io5";
 import React from "react";
+import { useEffect, useRef } from "react";
+import { useFormContext } from "./form-context"
 import { componentMetaData } from "../lib/components/component-data";
+import { FaArrowUpRightFromSquare, FaChevronRight } from "react-icons/fa6";
+import getContextMenuOptions, { ContextMenuOption } from "../lib/context-menu-options";
 
 export default function ContextMenu() {
     const { formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu, setModalData, setModalTemporaryVariables } = useFormContext();
@@ -76,6 +76,7 @@ export default function ContextMenu() {
             }
 
             const menuOption = value as ContextMenuOption;
+            const containsModalAction = "modal" in menuOption;
 
             const getOnClickAction = (menuOptionData: ContextMenuOption) => {
                 if (menuOptionData.action !== null) {
@@ -84,7 +85,7 @@ export default function ContextMenu() {
                     }
                 }
 
-                if (menuOptionData.modal !== null) {
+                if (containsModalAction) {
                     return () => {
                         setShowContextMenu(false);
                         setModalData(menuOptionData.modal)
@@ -99,10 +100,13 @@ export default function ContextMenu() {
             const containsSubOptions = "subOptions" in menuOption;
             const containsIcon = "icon" in menuOption;
 
-            return <li key={`menu-option-${index}`} className={`relative group flex items-center gap-2 text-sm px-4 py-1 hover:bg-zinc-100 cursor-pointer ${additionalStyling}`} onClick={onClickAction === null ? () => {} : onClickAction}>
-                {containsIcon && menuOption.icon}
-                {key}
-                {containsSubOptions && <IoChevronForward />}
+            return <li key={`menu-option-${index}`} className={`relative group flex justify-between items-center gap-3 text-sm px-4 py-1 hover:bg-zinc-100 cursor-pointer ${additionalStyling}`} onClick={onClickAction === null ? () => {} : onClickAction}>
+                <div className="flex gap-2 items-center">
+                    {containsIcon && menuOption.icon}
+                    {key}
+                </div>
+                {containsModalAction && <FaArrowUpRightFromSquare className="text-zinc-400" />}
+                {containsSubOptions && <FaChevronRight className="text-zinc-400" />}
                 {containsSubOptions && <ul className="hidden group-hover:block absolute bg-white border border-zinc-300 min-w-8 rounded-md left-[100%] -top-[9px] py-2 shadow">
                     {
                         Object.entries(menuOption['subOptions']!).map(([key, value], index) => {
