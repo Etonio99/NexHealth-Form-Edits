@@ -7,6 +7,7 @@ import { buttonType } from "./components/button-styling";
 interface ContextMenuOption {
     icon?: React.ReactNode,
     action?: (...args: any[]) => void,
+    actionUpdatesFormData?: boolean,
     subOptions?: Record<string, () => void>,
     applyTo?: string[],
     metaType?: metaComponentType,
@@ -15,7 +16,7 @@ interface ContextMenuOption {
     modal?: any,
 }
 
-export default function getContextMenuOptions(componentType: string, metaType: metaComponentType, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void) {
+export default function getContextMenuOptions(componentType: string, metaType: metaComponentType, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void, closeContextMenuModal: () => void) {
     const runFormChangingAction = (action: () => any) => {
         setFormData(action);
         hideContextMenu();
@@ -96,12 +97,24 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                         label: "Replacement Text",
                     },
                     {
-                        type: "button",
-                        action: findAndReplace,
-                        label: "Go",
-                        buttonType: buttonType.primary,
-                        parameters: [data, path, "$textToReplace", "$replacementText"],
-                    }
+                        type: "row",
+                        components: [
+                            {
+                                type: "button",
+                                action: findAndReplace,
+                                actionUpdatesFormData: true,
+                                label: "Go",
+                                buttonType: buttonType.primary,
+                                parameters: [data, path, "$textToReplace", "$replacementText"],
+                            },
+                            {
+                                type: "button",
+                                action: closeContextMenuModal,
+                                label: "Cancel",
+                                buttonType: buttonType.tertiary,
+                            }
+                        ],
+                    },
                 ],
             },
         },

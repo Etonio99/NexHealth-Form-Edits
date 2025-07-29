@@ -12,6 +12,6 @@ export default function SmallButton({ label, type, onClickAction, disabled }: Sm
     const buttonStyle = getButtonTypeStyle(type);
 
     return (
-        <button className={`rounded-md px-4 py-1 font-bold shadow transition-colors ${buttonStyle} disabled:cursor-not-allowed`} disabled={disabled} onClick={onClickAction}>{label}</button>
+        <button className={`rounded-md px-4 py-1 font-bold transition-colors ${buttonStyle} disabled:cursor-not-allowed`} disabled={disabled} onClick={onClickAction}>{label}</button>
     );
 }

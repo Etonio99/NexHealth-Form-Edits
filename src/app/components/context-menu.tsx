@@ -8,14 +8,19 @@ import React from "react";
 import { componentMetaData } from "../lib/components/component-data";
 
 export default function ContextMenu() {
-    const { formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu, setModalData } = useFormContext();
+    const { formData, setFormData, selectedComponent, setSelectedComponent, showContextMenu, setShowContextMenu, setModalData, setModalTemporaryVariables } = useFormContext();
 
     const hideContextMenu = () => {
         setShowContextMenu(false);
     }
 
+    const closeContextMenuModal = () => {
+        setModalData(null);
+        setModalTemporaryVariables({});
+    }
+
     const metaData = selectedComponent.type in componentMetaData ? componentMetaData[selectedComponent.type as keyof typeof componentMetaData] : componentMetaData.unimplemented;
-    const menuOptions = getContextMenuOptions(selectedComponent.type, metaData.metaType, formData, selectedComponent.path, setFormData, hideContextMenu);
+    const menuOptions = getContextMenuOptions(selectedComponent.type, metaData.metaType, formData, selectedComponent.path, setFormData, hideContextMenu, closeContextMenuModal);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

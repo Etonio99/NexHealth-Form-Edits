@@ -10,9 +10,11 @@ interface ModalComponentData {
     type: string,
     key?: string,
     action?: () => void,
+    actionUpdatesFormData?: boolean,
     label?: string,
     buttonType?: buttonType,
     parameters?: string[],
+    components?: any,
 }
 
 export default function ContextMenuOptionModal() {
@@ -36,7 +38,7 @@ export default function ContextMenuOptionModal() {
         setFormData(action);
     }
 
-    const runButtonAction = (action: (...args: any[]) => {}, parameterArray?: string[]) => {
+    const runFormChangingButtonAction = (action: (...args: any[]) => {}, parameterArray?: string[]) => {
         if (parameterArray) {
             const parameters = getActionParameters(parameterArray);
     
@@ -54,34 +56,64 @@ export default function ContextMenuOptionModal() {
         closeModal();
     }
 
+    const runGeneralButtonAction = (action: (...args: any[]) => {}, parameterArray?: string[]) => {
+        if (parameterArray) {
+            const parameters = getActionParameters(parameterArray);
+    
+            if (parameters.length > 0) {
+                action(...parameters);
+            }
+            else {
+                action();
+            }
+        }
+        else {
+            action();
+        }
+
+        closeModal();
+    }
+
     const closeModal = () => {
         setModalData(null);
         setModalTemporaryVariables({});
     }
 
-    const componentElements = modalData.components.map((componentData: ModalComponentData, index: number) => {
-        const componentKey: string = componentData.key as string;
+    const parseModalComponentData = (componentData: any): React.ReactNode[] => {
+        return componentData.map((component: ModalComponentData, index: number) => {
+            const componentKey: string = component.key as string;
 
-        switch (componentData.type) {
-            case "title":
-                return <div key={`modal-element-${index}`}>
-                    <h2 className="font-bold text-xl">{componentData.label}</h2>
-                </div>
-            case "notice":
-                return <div key={`modal-element-${index}`} className="text-zinc-500">
-                    <p>{componentData.label}</p>
-                </div>
-            case "textfield":
-                return <div key={`modal-element-${index}`} className="mb-2 flex flex-col gap-1">
-                    <label htmlFor={componentKey} className="font-bold">{componentData.label}</label>
-                    <input type="text" className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
-                </div>
-            case "button":
-                return <div key={`modal-element-${index}`} className="grid place-items-center">
-                    <SmallButton label={componentData.label as string} onClickAction={() => runButtonAction(componentData.action as () => {}, componentData.parameters)} type={componentData.buttonType as buttonType} />
-                </div> 
-        }
-    });
+            switch (component.type) {
+                case "title":
+                    return <div key={`modal-element-${index}`}>
+                        <h2 className="font-bold text-xl">{component.label}</h2>
+                    </div>
+                case "notice":
+                    return <div key={`modal-element-${index}`} className="text-zinc-500">
+                        <p>{component.label}</p>
+                    </div>
+                case "textfield":
+                    return <div key={`modal-element-${index}`} className="mb-2 flex flex-col gap-1">
+                        <label htmlFor={componentKey} className="font-bold">{component.label}</label>
+                        <input type="text" className="rounded-md border border-zinc-400 hover:border-zinc-500 transition-colors px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus:border-zinc-800" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
+                    </div>
+                case "button":
+                    const action = component.actionUpdatesFormData ? () => runFormChangingButtonAction(component.action as () => {}, component.parameters) : () => runGeneralButtonAction(component.action as () => {}, component.parameters);
+
+                    return <div key={`modal-element-${index}`} className="grid place-items-center">
+                        <SmallButton label={component.label as string} onClickAction={action} type={component.buttonType as buttonType} />
+                    </div> 
+                case "row":
+                    return <div key={`modal-element-${index}`} className="flex gap-2 m-auto">
+                        {parseModalComponentData(component.components)}
+                    </div>;
+                default:
+                    return null;
+            }
+        });
+    }
+
+    const componentElements = parseModalComponentData(modalData.components);
 
     return <div className="absolute inset-0 grid place-items-center">
         <div className="relative bg-white rounded-md w-lg shadow p-8 z-50 flex flex-col gap-4">
