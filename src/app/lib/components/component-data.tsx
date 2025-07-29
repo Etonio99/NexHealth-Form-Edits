@@ -1,4 +1,4 @@
-import { FaImage } from "react-icons/fa6";
+import { FaImage, FaSignature } from "react-icons/fa6";
 
 enum metaComponentType {
     none,
@@ -68,6 +68,7 @@ const componentMetaData = {
         metaType: metaComponentType.input,
     },
     signature: {
+        icon: <FaSignature className="opacity-25" size={96} />,
         className: "h-48",
         showLabel: true,
         metaType: metaComponentType.input,
