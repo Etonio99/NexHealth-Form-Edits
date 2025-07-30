@@ -3,7 +3,7 @@
 import React from "react";
 import { useEffect, useRef } from "react";
 import { useFormContext } from "./form-context"
-import { componentMetaData } from "../lib/components/component-data";
+import { componentMetaData, getGeneralType } from "../lib/components/component-data";
 import { FaArrowUpRightFromSquare, FaChevronRight } from "react-icons/fa6";
 import getContextMenuOptions, { ContextMenuOption } from "../lib/context-menu-options";
 
@@ -19,7 +19,8 @@ export default function ContextMenu() {
         setModalTemporaryVariables({});
     }
 
-    const metaData = selectedComponent.type in componentMetaData ? componentMetaData[selectedComponent.type as keyof typeof componentMetaData] : componentMetaData.unimplemented;
+    const generalComponentType = getGeneralType(selectedComponent.type);
+    const metaData = generalComponentType in componentMetaData ? componentMetaData[generalComponentType as keyof typeof componentMetaData] : componentMetaData.unimplemented;
     const menuOptions = getContextMenuOptions(selectedComponent.type, metaData.metaType, formData, selectedComponent.path, setFormData, hideContextMenu, closeContextMenuModal);
     const menuRef = useRef<HTMLDivElement>(null);
 
