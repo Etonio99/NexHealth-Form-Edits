@@ -9,7 +9,12 @@ function deleteComponent(data: any, path: string) {
         return null;
     }
 
-    delete pathData.parent[pathData.lastKey];
+    if (Array.isArray(pathData.parent)) {
+        pathData.parent.splice(Number(pathData.lastKey), 1);
+    }
+    else {
+        delete pathData.parent[pathData.lastKey];
+    }
 
     return clonedData;
 }
