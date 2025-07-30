@@ -89,7 +89,7 @@ const componentMetaData = {
 }
 
 const getGeneralType = (type: string) => {
-    if (["text", "email", "address", "phoneNumber"].includes(type)) {
+    if (["text", "email", "address", "phoneNumber", "number"].includes(type)) {
         return "textfield";
     }
     if (["datetime", "day"].includes(type)) {
