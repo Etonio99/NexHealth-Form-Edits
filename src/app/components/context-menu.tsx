@@ -80,7 +80,7 @@ export default function ContextMenu() {
 
             const getOnClickAction = (menuOptionData: ContextMenuOption) => {
                 if (menuOptionData.action !== null) {
-                    if (typeof value === "function") {
+                    if (typeof menuOptionData.action === "function") {
                         return menuOptionData.action;
                     }
                 }
