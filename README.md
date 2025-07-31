@@ -10,7 +10,7 @@ From there, the form will automatically load and display on the left side of the
 
 This project is built using NextJS. To start up a local development server:
 1. run `npm install` to install dependencies
-2. run `npm run dev` to start a server on localhost:3000.
+2. run `npm run dev` to start a server on localhost:3000
 
 ## Creating New Context Menu Options
 
