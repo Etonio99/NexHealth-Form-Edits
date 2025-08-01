@@ -8,7 +8,7 @@ import Legend from "./components/legend";
 
 export default function Home() {
   return (
-    <div>
+    <div className="max-h-screen overflow-hidden">
       <FormContext>
         <ContextMenuOptionModal />
         <ContextMenu />
