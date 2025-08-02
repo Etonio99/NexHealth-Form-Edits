@@ -1,20 +1,27 @@
 "use client";
 
 import React, { useEffect, useState } from "react"
-import { useFormContext } from "./form-context";
-import ComponentElement from "./component-element";
-import { getGeneralType } from "../lib/components/component-data";
+import { useFormContext } from "./form-context"
+import ComponentElement from "./component-element"
+import { getGeneralType } from "../lib/components/component-data"
+import { FaCopy } from "react-icons/fa6";
 
-const noDataToDisplayHTML = <div>No data to display</div>
+const noDataToDisplayHTML = <div className="h-full p-4">
+    <div className="bg-zinc-100 rounded-md w-full h-96 m-auto p-16 text-zinc-500 flex justify-center items-center flex-col text-center gap-2">
+        <FaCopy className="pb-4 text-zinc-300" size={96} />
+        <p>No data to display.</p>
+        <p>Start by copying the JSON data of a form page into the textarea on the right.</p>
+    </div>
+</div>
 
 export default function FormDisplayer() {
-    const { formData, setFormData } = useFormContext();
+    const { formData } = useFormContext();
 
     const [displayHTML, setDisplayHTML] = useState<React.ReactNode>(noDataToDisplayHTML);
 
     const displayFormData = (data: any) => {
         if (!("components" in data)) {
-            return <div>No data to display...</div>
+            return noDataToDisplayHTML;
         }
 
         const children = data['components'].map((component: string, index: number) => {
