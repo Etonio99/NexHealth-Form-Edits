@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react"
 import { useFormContext } from "./form-context"
-import ComponentElement from "./component-element"
 import { getGeneralType } from "../lib/components/component-data"
 import { FaCopy } from "react-icons/fa6";
+import ComponentElement from "./component-element"
 
 const noDataToDisplayHTML = <div className="h-full p-4">
     <div className="bg-zinc-100 rounded-md w-full h-96 m-auto p-16 text-zinc-500 flex justify-center items-center flex-col text-center gap-2">
