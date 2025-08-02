@@ -82,12 +82,10 @@ function capitalizeContainedLabels(data: any, path: string, pattern: capitalizat
                         componentReference["label"] = componentReference["label"].toUpperCase();
                         break;
                     case capitalizationPattern.firstWord:
-                        componentReference["label"] = componentReference["label"].charAt(0).toUpperCase() + componentReference["label"].slice(1).toLowerCase();
+                        componentReference["label"] = componentReference["label"].toLowerCase().replace(/\b\w/, (char: string) => char.toUpperCase());
                         break;
                     case capitalizationPattern.eachWord:
-                        componentReference["label"] = componentReference["label"].split(" ").map((word: string) => {
-                            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                        }).join(" ");
+                        componentReference["label"] = componentReference["label"].toLowerCase().replace(/\b\w+/g, (word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
                         break;
                 }
             }
