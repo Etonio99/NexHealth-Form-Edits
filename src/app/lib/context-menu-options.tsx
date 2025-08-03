@@ -17,59 +17,59 @@ interface ContextMenuOption {
 }
 
 export default function getContextMenuOptions(componentType: string, metaType: metaComponentType, data: any, path: string, setFormData: (data: any) => void, hideContextMenu: () => void, closeContextMenuModal: () => void) {
-    const runFormChangingAction = (action: () => any) => {
-        setFormData(action);
+    const runAction = (action: () => any, saveOverFormData: boolean) => {
+        saveOverFormData ? setFormData(action) : action();
         hideContextMenu();
     }
-
+    
     const contextMenuOptions: Record<string, ContextMenuOption> = {
         "Delete": {
             universal: true,
             icon: <FaTrash />,
-            action: () => runFormChangingAction(deleteComponent(data, path)),
+            action: () => runAction(deleteComponent(data, path), true),
             style: "text-red-500",
         },
         "Split Into Columns": {
             applyTo: ["columns"],
             icon: <FaTableColumns />,
             subOptions: {
-                "1": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 1)),
-                "2": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 2)),
-                "3": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 3)),
-                "4": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 4)),
-                "6": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 6)),
-                "12": () => runFormChangingAction(evenlyDisperseWithinColumns(data, path, 12)),
+                "1": () => runAction(evenlyDisperseWithinColumns(data, path, 1), true),
+                "2": () => runAction(evenlyDisperseWithinColumns(data, path, 2), true),
+                "3": () => runAction(evenlyDisperseWithinColumns(data, path, 3), true),
+                "4": () => runAction(evenlyDisperseWithinColumns(data, path, 4), true),
+                "6": () => runAction(evenlyDisperseWithinColumns(data, path, 6), true),
+                "12": () => runAction(evenlyDisperseWithinColumns(data, path, 12), true),
             }
         },
         "Capitalization": {
             applyTo: ["columns"],
             icon: <FaA />,
             subOptions: {
-                "All Lowercase": () => runFormChangingAction(capitalizeContainedLabels(data, path, capitalizationPattern.allLowercase)),
-                "All Uppercase": () => runFormChangingAction(capitalizeContainedLabels(data, path, capitalizationPattern.allUppercase)),
-                "First Word": () => runFormChangingAction(capitalizeContainedLabels(data, path, capitalizationPattern.firstWord)),
-                "Every Word": () => runFormChangingAction(capitalizeContainedLabels(data, path, capitalizationPattern.eachWord)),
+                "All Lowercase": () => runAction(capitalizeContainedLabels(data, path, capitalizationPattern.allLowercase), true),
+                "All Uppercase": () => runAction(capitalizeContainedLabels(data, path, capitalizationPattern.allUppercase), true),
+                "First Word": () => runAction(capitalizeContainedLabels(data, path, capitalizationPattern.firstWord), true),
+                "Every Word": () => runAction(capitalizeContainedLabels(data, path, capitalizationPattern.eachWord), true),
             }
         },
         "Alphabetize": {
             applyTo: ["columns"],
             icon: <FaArrowDownAZ />,
             subOptions: {
-                "A to Z": () => runFormChangingAction(alphabetize(data, path, false)),
-                "Z to A": () => runFormChangingAction(alphabetize(data, path, true)),
+                "A to Z": () => runAction(alphabetize(data, path, false), true),
+                "Z to A": () => runAction(alphabetize(data, path, true), true),
             }
         },
         "Delete Hidden": {
             applyTo: ["columns"],
             icon: <FaEyeSlash />,
-            action: () => runFormChangingAction(deleteHidden(data, path)),
+            action: () => runAction(deleteHidden(data, path), true),
         },
         "Hide/Disable": {
             metaType: metaComponentType.input,
             icon: <FaSliders />,
             subOptions: {
-                "Toggle Hidden": () => runFormChangingAction(toggleBoolean(data, path, "hidden")),
-                "Toggle Disabled": () => runFormChangingAction(toggleBoolean(data, path, "disabled")),
+                "Toggle Hidden": () => runAction(toggleBoolean(data, path, "hidden"), true),
+                "Toggle Disabled": () => runAction(toggleBoolean(data, path, "disabled"), true),
             }
         },
         "Find and Replace": {
