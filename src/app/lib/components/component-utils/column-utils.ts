@@ -136,8 +136,6 @@ function alphabetize(data: any, path: string, reverse: boolean) {
 
     const containedComponents = [];
     const numberOfColumns = pathData.parent[pathData.lastKey]["columns"].length;
-    console.log("Number of columns:", numberOfColumns);
-
     const numOfComponentsPerColumn: number[] = [];
 
     for (let i = 0; i < numberOfColumns; i++) {

@@ -11,7 +11,7 @@ interface ModalComponentData {
     key?: string,
     action?: () => void,
     actionUpdatesFormData?: boolean,
-    label?: string,
+    label?: string | ((...args: any[]) => string) | React.ReactNode | ((...args: any[]) => React.ReactNode),
     buttonType?: buttonType,
     parameters?: string[],
     components?: any,
@@ -83,18 +83,39 @@ export default function ContextMenuOptionModal() {
         return componentData.map((component: ModalComponentData, index: number) => {
             const componentKey: string = component.key as string;
 
+            let label;
+
+            if (typeof component.label === "string") {
+                label = component.label;
+            }
+            else if (typeof component.label === "function") {
+                if (component.parameters) {
+                    const parameters = getActionParameters(component.parameters);
+            
+                    if (parameters.length > 0) {
+                        label = component.label(...parameters);
+                    }
+                    else {
+                        label = component.label();
+                    }
+                }
+                else {
+                    label = component.label();
+                }
+            }
+
             switch (component.type) {
                 case "title":
                     return <div key={`modal-element-${index}`}>
-                        <h2 className="font-bold text-xl">{component.label}</h2>
+                        <h2 className="font-bold text-xl">{label}</h2>
                     </div>
                 case "notice":
                     return <div key={`modal-element-${index}`} className="text-zinc-500">
-                        <p>{component.label}</p>
+                        <div>{label}</div>
                     </div>
                 case "textfield":
                     return <div key={`modal-element-${index}`} className="mb-2 flex flex-col gap-1">
-                        <label htmlFor={componentKey} className="font-bold">{component.label}</label>
+                        <label htmlFor={componentKey} className="font-bold">{label}</label>
                         <input type="text" className="rounded-md border border-zinc-400 hover:border-zinc-500 transition-colors px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus:border-zinc-800" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
                     </div>
                 case "button":

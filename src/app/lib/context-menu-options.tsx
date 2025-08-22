@@ -1,8 +1,9 @@
 import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
-import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots } from "react-icons/fa6";
+import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots, FaCircleDot } from "react-icons/fa6";
 import { deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 import { buttonType } from "./components/button-styling";
+import { getRadioOptionsForModal } from "./components/component-utils/radio-utils";
 
 interface ContextMenuOption {
     icon?: React.ReactNode,
@@ -22,6 +23,14 @@ export default function getContextMenuOptions(componentType: string, metaType: m
         hideContextMenu();
     }
     
+    const getRadioOptionElements = () => {
+        const options = getRadioOptionsForModal(data, path);
+
+        return options?.map((option, index) => {
+            return <p key={`radio-option-${index}`}>{option}</p>
+        })
+    }
+
     const contextMenuOptions: Record<string, ContextMenuOption> = {
         "Delete": {
             universal: true,
@@ -114,6 +123,23 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                                 buttonType: buttonType.tertiary,
                             }
                         ],
+                    },
+                ],
+            },
+        },
+        "Edit Radio Options": {
+            applyTo: ["columns", "radio"],
+            icon: <FaCircleDot />,
+            modal: {
+                showCloseButton: true,
+                components: [
+                    {
+                        type: "title",
+                        label: "Find and Replace",
+                    },
+                    {
+                        type: "notice",
+                        label: getRadioOptionElements,
                     },
                 ],
             },
