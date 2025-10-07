@@ -1,5 +1,5 @@
-import { alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
-import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots } from "react-icons/fa6";
+import { addFollowUpQuestions, alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
+import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots, FaClipboardQuestion } from "react-icons/fa6";
 import { deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 import { buttonType } from "./components/button-styling";
@@ -106,6 +106,43 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                                 label: "Go",
                                 buttonType: buttonType.primary,
                                 parameters: [data, path, "$textToReplace", "$replacementText"],
+                            },
+                            {
+                                type: "button",
+                                action: closeContextMenuModal,
+                                label: "Cancel",
+                                buttonType: buttonType.tertiary,
+                            }
+                        ],
+                    },
+                ],
+            },
+        },
+        "Add Follow Up Questions": {
+            applyTo: ["columns"],
+            icon: <FaClipboardQuestion />,
+            modal: {
+                showCloseButton: true,
+                components: [
+                    {
+                        type: "title",
+                        label: "Add Follow Up Questions",
+                    },
+                    {
+                        type: "textfield",
+                        key: "question",
+                        label: "Question",
+                    },
+                    {
+                        type: "row",
+                        components: [
+                            {
+                                type: "button",
+                                action: addFollowUpQuestions,
+                                actionUpdatesFormData: true,
+                                label: "Add",
+                                buttonType: buttonType.primary,
+                                parameters: [data, path, "$question", true, true],
                             },
                             {
                                 type: "button",
