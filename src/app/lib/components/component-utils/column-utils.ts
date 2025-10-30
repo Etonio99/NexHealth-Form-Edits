@@ -125,6 +125,28 @@ function deleteHidden(data: any, path: string) {
     return clonedData;
 }
 
+function makeAllRequired(data: any, path: string) {
+    const clonedData = structuredClone(data);
+
+    const pathData = parseJsonPath(clonedData, path);
+    if (pathData === null) {
+        console.error("pathData returned null! Unable to continue.");
+        return null;
+    }
+
+    for (const columnID in pathData.parent[pathData.lastKey]["columns"]) {
+        for (const componentID in pathData.parent[pathData.lastKey]["columns"][columnID]['components']) {
+            const componentReference = pathData.parent[pathData.lastKey]["columns"][columnID]['components'][componentID];
+
+            if (componentReference && "validate" in componentReference) {
+                componentReference["validate"]["required"] = true;
+            }
+        }
+    }
+
+    return clonedData;
+}
+
 function alphabetize(data: any, path: string, reverse: boolean) {
     const clonedData = structuredClone(data);
 
@@ -295,4 +317,12 @@ function addFollowUpQuestions(data: any, path: string, question: string, ignoreH
 
 // TODO: make aplhabetize function work with labels that have a character at the start of them ("*pre-med - amox" for example)
 
-export { evenlyDisperseWithinColumns, capitalizeContainedLabels, capitalizationPattern, deleteHidden, alphabetize, addFollowUpQuestions }
+export { 
+    evenlyDisperseWithinColumns,
+    capitalizeContainedLabels,
+    capitalizationPattern,
+    deleteHidden,
+    alphabetize,
+    addFollowUpQuestions,
+    makeAllRequired
+}

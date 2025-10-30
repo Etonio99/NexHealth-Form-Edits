@@ -1,5 +1,5 @@
-import { addFollowUpQuestions, alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns } from "./components/component-utils/column-utils"
-import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots, FaClipboardQuestion } from "react-icons/fa6";
+import { addFollowUpQuestions, alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns, makeAllRequired } from "./components/component-utils/column-utils"
+import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots, FaClipboardQuestion, FaAsterisk } from "react-icons/fa6";
 import { deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 import { buttonType } from "./components/button-styling";
@@ -154,6 +154,11 @@ export default function getContextMenuOptions(componentType: string, metaType: m
                     },
                 ],
             },
+        },
+        "Make All Required": {
+            applyTo: ["columns"],
+            icon: <FaAsterisk />,
+            action: () => runAction(makeAllRequired(data, path), true),
         },
     }
 
