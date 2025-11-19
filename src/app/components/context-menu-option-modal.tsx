@@ -97,6 +97,11 @@ export default function ContextMenuOptionModal() {
                         <label htmlFor={componentKey} className="font-bold">{component.label}</label>
                         <input type="text" className="rounded-md border border-zinc-400 hover:border-zinc-500 transition-colors px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus:border-zinc-800" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
                     </div>
+                case "textarea":
+                    return <div key={`modal-element-${index}`} className="mb-2 flex flex-col gap-1">
+                        <label htmlFor={componentKey} className="font-bold">{component.label}</label>
+                        <textarea className="rounded-md border border-zinc-400 hover:border-zinc-500 transition-colors px-3 py-2 outline-none focus:ring-4 focus:ring-sync-500 focus:border-zinc-800" name={componentKey} value={modalTemporaryVariables[componentKey] ?? ""} onChange={(e) => setModalTemporaryVariables({ ...modalTemporaryVariables, [componentKey]: e.target.value })} />
+                    </div>
                 case "button":
                     const action = component.actionUpdatesFormData ? () => runFormChangingButtonAction(component.action as () => {}, component.parameters) : () => runGeneralButtonAction(component.action as () => {}, component.parameters);
 

@@ -1,6 +1,6 @@
 import { addFollowUpQuestions, alphabetize, capitalizationPattern, capitalizeContainedLabels, deleteHidden, evenlyDisperseWithinColumns, makeAllRequired } from "./components/component-utils/column-utils"
 import { FaTableColumns, FaTrash, FaEyeSlash, FaA, FaArrowDownAZ, FaSliders, FaArrowsTurnToDots, FaClipboardQuestion, FaAsterisk } from "react-icons/fa6";
-import { deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
+import { addRadioQuestionsList, deleteComponent, findAndReplace, toggleBoolean } from "./components/component-utils/universal-utils";
 import { metaComponentType } from "./components/component-data";
 import { buttonType } from "./components/button-styling";
 
@@ -159,6 +159,47 @@ export default function getContextMenuOptions(componentType: string, metaType: m
             applyTo: ["columns"],
             icon: <FaAsterisk />,
             action: () => runAction(makeAllRequired(data, path), true),
+        },
+        "Add Radio Questions from List": {
+            universal: true,
+            icon: <FaClipboardQuestion />,
+            modal: {
+                showCloseButton: true,
+                components: [
+                    {
+                        type: "title",
+                        label: "Radio Questions from List",
+                    },
+                    {
+                        type: "notice",
+                        label: "Separate questions into different lines in the textarea."
+                    },
+                    {
+                        type: "textarea",
+                        key: "questions",
+                        label: "Questions List",
+                    },
+                    {
+                        type: "row",
+                        components: [
+                            {
+                                type: "button",
+                                action: addRadioQuestionsList,
+                                actionUpdatesFormData: true,
+                                label: "Add",
+                                buttonType: buttonType.primary,
+                                parameters: [data, path, "$questions"],
+                            },
+                            {
+                                type: "button",
+                                action: closeContextMenuModal,
+                                label: "Cancel",
+                                buttonType: buttonType.tertiary,
+                            }
+                        ],
+                    },
+                ],
+            },
         },
     }
 
