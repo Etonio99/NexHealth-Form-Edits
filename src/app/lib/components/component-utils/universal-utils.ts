@@ -164,7 +164,7 @@ function addRadioQuestionsList(data: any, path: string, questionsList: string) {
     for (const [questionIndex, questionText] of splitQuestions.entries()) {
         const questionData = { ...BASE_RADIO_DATA };
         questionData.label = questionText;
-        const slug = questionText.toLocaleLowerCase().replaceAll(" ", "_");
+        const slug = questionText.toLocaleLowerCase().replaceAll("/W", "_").replace(/[^a-zA-Z0-9_]/g, "");
         questionData.key = slug;
         questionData.id = slug;
 
